@@ -1,0 +1,32 @@
+{
+    "orders": [
+        {
+            "item": "Sofa",
+            "quantity": 15,
+            "price": 30000,
+            "buyer": "Elba",
+            "date": "22.12.2020"
+        },
+        {
+            "item": "Bed",
+            "quantity": 222,
+            "price": 70000,
+            "buyer": "Angstrem",
+            "date": "01.01.2021"
+        },
+        {
+            "item": "Armchair",
+            "quantity": 180,
+            "price": 16010,
+            "buyer": "Maria",
+            "date": "06.07.2019"
+        },
+        {
+            "item": "Table",
+            "quantity": 47,
+            "price": 5000,
+            "buyer": "ITmanuf",
+            "date": "30.12.2020"
+        }
+    ]
+}
