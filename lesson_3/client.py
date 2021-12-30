@@ -12,6 +12,7 @@ addr — ip-адрес сервера;
 port — tcp-порт на сервере, по умолчанию 7777.
 """
 
+from argparse import ArgumentParser
 from socket import socket, AF_INET, SOCK_STREAM
 import time
 
@@ -31,7 +32,7 @@ def create_presence_msg(account_name, status=''):
     }
 
 
-def create_client_socket(address='localhost', port=7777):
+def create_client_socket(address, port):
     s = socket(AF_INET, SOCK_STREAM)
     s.connect((address, port))
     return s
@@ -45,10 +46,10 @@ def handle_response(message):
         print(f'Received invalid response from server {message}')
 
 
-def test(data):
+def test(data, address, port):
     print()
     print(f'***** STARTING TEST *****')
-    client_socket = create_client_socket()
+    client_socket = create_client_socket(address, port)
     print(f'sending data to server {data}')
     send_message(data, client_socket)
     server_json = get_data(client_socket)
@@ -57,7 +58,13 @@ def test(data):
 
 
 if __name__ == '__main__':
-    test(create_presence_msg('Oksana'))
+    parser = ArgumentParser()
+    parser.add_argument("-a", "--address", help="address of remote server", default='localhost')
+    parser.add_argument("-p", "--port", help="port of remote server", default=7777)
+
+    args = parser.parse_args()
+
+    test(create_presence_msg('Oksana'), args.address, args.port)
     test({
         'action': 'invalid_action',
         'time': time.time(),
@@ -66,4 +73,4 @@ if __name__ == '__main__':
             'account_name': 'Oksana',
             'status': 'status'
         }
-    })
+    }, args.address, args.port)
