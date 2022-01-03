@@ -16,7 +16,7 @@ from argparse import ArgumentParser
 from socket import socket, AF_INET, SOCK_STREAM
 import time
 
-from lesson_3.messages import MessageType, ServerResponseFieldName
+from messages import MessageType, ServerResponseFieldName
 from utils import send_message, get_data
 
 
