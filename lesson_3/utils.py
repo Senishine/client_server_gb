@@ -4,8 +4,7 @@ DEFAULT_ENCODING = 'utf-8'
 
 
 def send_message(message, sock):
-    if message is None:
-        return
+    assert message is not None, 'Message is None'
     data_to_send = message
     if isinstance(message, str):
         data_to_send = message.encode(DEFAULT_ENCODING)
