@@ -1,8 +1,6 @@
 import time
 import unittest
-
 import mock
-
 from messages import MessageType
 from server import create_response, accept_client_connection, handle_request
 
@@ -55,10 +53,12 @@ class TestCreateResponse(unittest.TestCase):
         # Then
         self.assertEqual(expected, response)
 
+
+class TestAcceptClientConnection(unittest.TestCase):
     @mock.patch('server.get_data')
     @mock.patch('server.send_message')
     @mock.patch('server.handle_request')
-    def test_accept_client_connect(self, mocked_handle_request, mocked_send_message, mocked_get_data):
+    def test_accept_client_connection(self, mocked_handle_request, mocked_send_message, mocked_get_data):
         # Given
         client_response = {'response': 200}
         client_socket = mock.Mock()
@@ -84,7 +84,7 @@ class TestCreateResponse(unittest.TestCase):
     @mock.patch('server.get_data')
     @mock.patch('server.send_message')
     @mock.patch('server.handle_request')
-    def test_accept_client_connect_with_error(self, mocked_handle_request, mocked_send_message, mocked_get_data):
+    def test_accept_client_connection_with_error(self, mocked_handle_request, mocked_send_message, mocked_get_data):
         # Given
         client_response = {'response': 400, 'error': 'Bad request'}
         client_socket = mock.Mock()
@@ -101,7 +101,7 @@ class TestCreateResponse(unittest.TestCase):
     @mock.patch('server.get_data')
     @mock.patch('server.send_message')
     @mock.patch('server.handle_request')
-    def test_accept_client_connect_with_handle_request_error(self,
+    def test_accept_client_connection_with_handle_request_error(self,
                                                              mocked_handle_request,
                                                              mocked_send_message,
                                                              mocked_get_data):
@@ -128,6 +128,8 @@ class TestCreateResponse(unittest.TestCase):
         mocked_send_message.assert_called_once_with(client_response, client_socket)
         client_socket.close.assert_called_once()
 
+
+class TestHandleRequest(unittest.TestCase):
     def test_handle_message(self):
         # Given
         test_data = {
