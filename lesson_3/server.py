@@ -37,11 +37,11 @@ def create_response(code=200, msg=None):
 def accept_client_connection(client_socket):
     try:
         client_json = get_data(client_socket)
-        logger.info('received data from client [data=%s]', client_json)
+        logger.info('Received data from client [data=%s]', client_json)
         handle_request(client_json)
         response = create_response()
     except Exception as e:
-        logger.error('error occurred during client request handling [client_socket=%s, error=%s]', client_socket, e)
+        logger.error('Error occurred during client request handling [client_socket=%s, error=%s]', client_socket, e)
         response = create_response(400, 'Bad request')
     logger.info('Sending response to client [client_socket=%s, response=%s]', client_socket, response)
     send_message(response, client_socket)
@@ -54,7 +54,7 @@ def start_server(address='', port=7777):
     s.listen(5)
     while True:
         client, addr = s.accept()
-        logger.info('accepted client connection [client_address=%s]', addr)
+        logger.info('Accepted client connection [client_address=%s]', addr)
         accept_client_connection(client)
 
 

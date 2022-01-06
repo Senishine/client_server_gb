@@ -60,10 +60,10 @@ def handle_response(message):
 def test(data, address, port):
     logger.info(f'***** STARTING TEST *****')
     client_socket = create_client_socket(address, port)
-    logger.info(f'sending data to server %s', data)
+    logger.info(f'Sending data to server %s', data)
     send_message(data, client_socket)
     server_json = get_data(client_socket)
-    logger.info(f'received response from server %s', server_json)
+    logger.info(f'Received response from server %s', server_json)
     try:
         handle_response(server_json)
     except AssertionError as e:

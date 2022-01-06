@@ -13,8 +13,9 @@ log_config = {
         "file_out": {
             "filename": "gb.server.log",
             "formatter": "default_formatter",
-            "class": "logging.FileHandler",
-            "level": "INFO"
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "level": "INFO",
+            "when": "midnight"
         }
     },
     "formatters": {
