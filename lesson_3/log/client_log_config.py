@@ -2,7 +2,7 @@ import logging
 
 logger = logging.getLogger('gb.client')
 
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s ")
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(module)s - %(message)s ")
 
 fh = logging.FileHandler("gb.client.log", encoding='utf-8')
 fh.setLevel(logging.INFO)
