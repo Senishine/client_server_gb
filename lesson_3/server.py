@@ -11,7 +11,9 @@ from socket import socket, AF_INET, SOCK_STREAM
 from messages import MessageType, ServerResponseFieldName
 from utils import send_message, get_data
 
-from log.server_log_config import logger
+from log.server_log_config import logging
+
+logger = logging.getLogger('gb.server')
 
 
 def create_response(code=200, msg=None):

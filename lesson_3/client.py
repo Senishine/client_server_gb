@@ -19,7 +19,10 @@ import time
 from messages import MessageType, ServerResponseFieldName
 from utils import send_message, get_data
 
-from log.client_log_config import logger
+from log.client_log_config import logging
+
+logger = logging.getLogger('gb.client')
+
 
 def create_presence_msg(account_name, status=''):
     return {
