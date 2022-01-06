@@ -19,6 +19,7 @@ import time
 from messages import MessageType, ServerResponseFieldName
 from utils import send_message, get_data
 
+from log.client_log_config import logger
 
 def create_presence_msg(account_name, status=''):
     return {
@@ -33,33 +34,37 @@ def create_presence_msg(account_name, status=''):
 
 
 def create_client_socket(address, port):
+    logger.info('Creating new socket [address=%s, port=%s]', address, port)
     s = socket(AF_INET, SOCK_STREAM)
     s.connect((address, port))
     return s
 
 
 def handle_response(message):
+    logger.info('Received response from server [message=%s]', message)
     assert message is not None, 'Message is None'
     code = message.get(ServerResponseFieldName.RESPONSE.value)
     assert code is not None, f'No {ServerResponseFieldName.RESPONSE.value} field in message'
 
     if code == 200:
-        print(f'Received successful response from server {message}')
+        logger.info('Received successful response from server [message=%s]', message)
         return True
     else:
-        print(f'Received invalid response from server {message}')
+        logger.info('Received invalid response from server [message=%s]', message)
         return False
 
 
 def test(data, address, port):
-    print()
-    print(f'***** STARTING TEST *****')
+    logger.info(f'***** STARTING TEST *****')
     client_socket = create_client_socket(address, port)
-    print(f'sending data to server {data}')
+    logger.info(f'sending data to server %s', data)
     send_message(data, client_socket)
     server_json = get_data(client_socket)
-    print(f'received response from server {server_json}')
-    handle_response(server_json)
+    logger.info(f'received response from server %s', server_json)
+    try:
+        handle_response(server_json)
+    except AssertionError as e:
+        logger.error('Error occurred during server response handling [address=%s, port=%s, error=%s]', address, port, e)
 
 
 if __name__ == '__main__':
