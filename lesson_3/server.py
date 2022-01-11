@@ -11,8 +11,13 @@ from socket import socket, AF_INET, SOCK_STREAM
 from messages import MessageType, ServerResponseFieldName
 from utils import send_message, get_data
 
+from log.server_log_config import logging
+
+logger = logging.getLogger('gb.server')
+
 
 def create_response(code=200, msg=None):
+    logger.info('Creating response for client [code=%s, msg=%s]', code, msg)
     assert isinstance(code, int), 'code is not an integer'
     data = {
         ServerResponseFieldName.RESPONSE.value: code
@@ -32,12 +37,13 @@ def create_response(code=200, msg=None):
 def accept_client_connection(client_socket):
     try:
         client_json = get_data(client_socket)
-        print(f'received data from client is {client_json}')
+        logger.info('Received data from client [data=%s]', client_json)
         handle_request(client_json)
         response = create_response()
     except Exception as e:
-        print(f'error occurred during client request handling {e}')
+        logger.error('Error occurred during client request handling [client_socket=%s, error=%s]', client_socket, e)
         response = create_response(400, 'Bad request')
+    logger.info('Sending response to client [client_socket=%s, response=%s]', client_socket, response)
     send_message(response, client_socket)
     client_socket.close()
 
@@ -48,7 +54,7 @@ def start_server(address='', port=7777):
     s.listen(5)
     while True:
         client, addr = s.accept()
-        print(f'accepted client connection {addr}')
+        logger.info('Accepted client connection [client_address=%s]', addr)
         accept_client_connection(client)
 
 
@@ -60,4 +66,4 @@ def handle_request(message):
 
 
 if __name__ == '__main__':
-    server = start_server()
+    start_server()
