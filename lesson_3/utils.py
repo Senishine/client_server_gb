@@ -4,13 +4,14 @@ DEFAULT_ENCODING = 'utf-8'
 
 
 def send_message(message, sock):
-    if message is None:
-        return
-    data_to_send = message
     if isinstance(message, str):
         data_to_send = message.encode(DEFAULT_ENCODING)
     elif isinstance(message, dict):
         data_to_send = json.dumps(message).encode(DEFAULT_ENCODING)
+    elif isinstance(message, bytes):
+        data_to_send = message
+    else:
+        raise ValueError('unsupported type of message')
     sock.send(data_to_send)
 
 

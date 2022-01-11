@@ -8,11 +8,12 @@
 """
 from socket import socket, AF_INET, SOCK_STREAM
 
-from lesson_3.messages import MessageType, ServerResponseFieldName
+from messages import MessageType, ServerResponseFieldName
 from utils import send_message, get_data
 
 
 def create_response(code=200, msg=None):
+    assert isinstance(code, int), 'code is not an integer'
     data = {
         ServerResponseFieldName.RESPONSE.value: code
     }
@@ -28,30 +29,35 @@ def create_response(code=200, msg=None):
     return data
 
 
-def create_server_socket(address='', port=7777):
+def accept_client_connection(client_socket):
+    try:
+        client_json = get_data(client_socket)
+        print(f'received data from client is {client_json}')
+        handle_request(client_json)
+        response = create_response()
+    except Exception as e:
+        print(f'error occurred during client request handling {e}')
+        response = create_response(400, 'Bad request')
+    send_message(response, client_socket)
+    client_socket.close()
+
+
+def start_server(address='', port=7777):
     s = socket(AF_INET, SOCK_STREAM)
     s.bind((address, port))
     s.listen(5)
     while True:
         client, addr = s.accept()
         print(f'accepted client connection {addr}')
-        try:
-            client_json = get_data(client)
-            print(f'received data from client is {client_json}')
-            handle_request(client_json)
-            response = create_response()
-        except Exception as e:
-            print(f'error occurred during client request handling {e}')
-            response = create_response(400, 'Bad request')
-        send_message(response, client)
-        client.close()
+        accept_client_connection(client)
 
 
 def handle_request(message):
-    if message['action'] == MessageType.PRESENCE.value:
+    action = message.get('action')
+    if action == MessageType.PRESENCE.value:
         return
     raise ValueError('Unsupported action')
 
 
 if __name__ == '__main__':
-    server = create_server_socket()
+    server = start_server()

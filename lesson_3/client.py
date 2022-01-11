@@ -16,7 +16,7 @@ from argparse import ArgumentParser
 from socket import socket, AF_INET, SOCK_STREAM
 import time
 
-from lesson_3.messages import MessageType, ServerResponseFieldName
+from messages import MessageType, ServerResponseFieldName
 from utils import send_message, get_data
 
 
@@ -39,11 +39,16 @@ def create_client_socket(address, port):
 
 
 def handle_response(message):
-    code = message[ServerResponseFieldName.RESPONSE.value]
+    assert message is not None, 'Message is None'
+    code = message.get(ServerResponseFieldName.RESPONSE.value)
+    assert code is not None, f'No {ServerResponseFieldName.RESPONSE.value} field in message'
+
     if code == 200:
         print(f'Received successful response from server {message}')
+        return True
     else:
         print(f'Received invalid response from server {message}')
+        return False
 
 
 def test(data, address, port):
