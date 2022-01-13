@@ -15,15 +15,15 @@ port — tcp-порт на сервере, по умолчанию 7777.
 from argparse import ArgumentParser
 from socket import socket, AF_INET, SOCK_STREAM
 import time
-
+from log.decorator import log
 from messages import MessageType, ServerResponseFieldName
 from utils import send_message, get_data
-
 from log.client_log_config import logging
 
 logger = logging.getLogger('gb.client')
 
 
+@log(logger)
 def create_presence_msg(account_name, status=''):
     return {
         'action': MessageType.PRESENCE.value,
@@ -36,6 +36,7 @@ def create_presence_msg(account_name, status=''):
     }
 
 
+@log(logger)
 def create_client_socket(address, port):
     logger.info('Creating new socket [address=%s, port=%s]', address, port)
     s = socket(AF_INET, SOCK_STREAM)
@@ -43,6 +44,7 @@ def create_client_socket(address, port):
     return s
 
 
+@log(logger)
 def handle_response(message):
     logger.info('Received response from server [message=%s]', message)
     assert message is not None, 'Message is None'
@@ -57,6 +59,7 @@ def handle_response(message):
         return False
 
 
+@log(logger)
 def test(data, address, port):
     logger.info(f'***** STARTING TEST *****')
     client_socket = create_client_socket(address, port)
