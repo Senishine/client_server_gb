@@ -8,6 +8,7 @@
 """
 from socket import socket, AF_INET, SOCK_STREAM
 
+from log.decorator import Log
 from messages import MessageType, ServerResponseFieldName
 from utils import send_message, get_data
 
@@ -15,7 +16,7 @@ from log.server_log_config import logging
 
 logger = logging.getLogger('gb.server')
 
-
+@Log(logger)
 def create_response(code=200, msg=None):
     logger.info('Creating response for client [code=%s, msg=%s]', code, msg)
     assert isinstance(code, int), 'code is not an integer'
@@ -34,6 +35,7 @@ def create_response(code=200, msg=None):
     return data
 
 
+@Log(logger)
 def accept_client_connection(client_socket):
     try:
         client_json = get_data(client_socket)
@@ -48,6 +50,7 @@ def accept_client_connection(client_socket):
     client_socket.close()
 
 
+@Log(logger)
 def start_server(address='', port=7777):
     s = socket(AF_INET, SOCK_STREAM)
     s.bind((address, port))
@@ -58,6 +61,7 @@ def start_server(address='', port=7777):
         accept_client_connection(client)
 
 
+@Log(logger)
 def handle_request(message):
     action = message.get('action')
     if action == MessageType.PRESENCE.value:
