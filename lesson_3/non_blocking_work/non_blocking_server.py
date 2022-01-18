@@ -6,7 +6,6 @@ import select
 from socket import socket, AF_INET, SOCK_STREAM
 from log.decorator import Log
 from log.server_log_config import logging
-from messages import MessageType
 
 logger = logging.getLogger('gb.server')
 
@@ -63,13 +62,6 @@ def start_server(address='', port=7777):
 
         for sck in ex_list:
             cleanup_socket(sck)
-
-@Log(logger)
-def handle_request(message):
-    action = message.get('action')
-    if action == MessageType.PRESENCE.value:
-        return
-    raise ValueError('Unsupported action')
 
 
 if __name__ == '__main__':
